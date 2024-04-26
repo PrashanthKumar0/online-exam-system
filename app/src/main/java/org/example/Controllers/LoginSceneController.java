@@ -12,13 +12,13 @@ import javafx.scene.control.Button;
 public class LoginSceneController {
     @FXML
     Button admin_login_button;
-    
+
     @FXML
-    public void onAdminLogin(ActionEvent event) throws Exception{
+    public void onAdminLogin(ActionEvent event) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/admin_login_scene.fxml"));
-        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.show();  
+        stage.show();
     }
 }
