@@ -50,12 +50,12 @@
             <Label layoutX="270.0" layoutY="131.0" text="Student Login" />
             <ImageView fitHeight="95.0" fitWidth="101.0" layoutX="256.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@StudentCircleAvatar.png" />
+                  <Image url="@images/StudentCircleAvatar.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="34.0" fitWidth="39.0" layoutX="10.0" layoutY="10.0" onMouseClicked="#back" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@Back.png" />
+                  <Image url="@images/Back.png" />
                </image>
             </ImageView>
          </children>

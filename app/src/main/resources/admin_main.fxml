@@ -50,13 +50,13 @@
             <Label layoutX="270.0" layoutY="122.0" prefHeight="25.0" prefWidth="100.0" text="Admin Login" />
             <ImageView fitHeight="68.0" fitWidth="124.0" layoutX="267.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@CircleAvatar.png" />
+                  <Image url="@images/CircleAvatar.png" />
                </image>
             </ImageView>
             <PasswordField fx:id="admin_password" layoutX="237.0" layoutY="214.0" promptText="Admin Password" />
             <ImageView onMouseClicked="#back" fitHeight="30.0" fitWidth="35.0" layoutX="11.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@Back.png" />
+                  <Image url="@images/Back.png" />
                </image>
             </ImageView>
          </children>

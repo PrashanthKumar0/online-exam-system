@@ -52,7 +52,7 @@
         </Label>
             <ImageView fitHeight="450.0" fitWidth="713.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@login_scene_background.jpg" />
+                  <Image url="@images/main_background.jpg" />
                </image>
                <effect>
                   <GaussianBlur radius="9.26" />
