@@ -12,4 +12,4 @@ plugins {
 
 rootProject.name = 'online_exam_system'
 include('app')
-include('server')
+// include('server')
