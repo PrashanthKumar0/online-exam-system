@@ -41,7 +41,7 @@
 <?import javafx.scene.effect.GaussianBlur?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.LoginSceneController">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.MainSceneController">
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
@@ -58,7 +58,7 @@
                   <GaussianBlur radius="9.26" />
                </effect>
             </ImageView>
-            <Button onAction="#onAdminLogin" layoutX="187.0" layoutY="184.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="133.0" text="Admin Login" />
+            <Button onAction="#onAdminLogin" layoutX="187.0" layoutY="184.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="133.0" text="Admin Pannel" />
             <Button onAction="#onStudentLogin" layoutX="429.0" layoutY="187.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="133.0" text="Student Login" />
       </children>
     </AnchorPane>
