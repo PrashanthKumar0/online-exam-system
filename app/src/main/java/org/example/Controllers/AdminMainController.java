@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
+import javafx.scene.control.TextField;
 import javafx.application.Application;
 
 import org.example.Structs.Option;
@@ -38,12 +39,10 @@ public class AdminMainController extends Application {
     @FXML
     private Button upload_question_btn;
 
-
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
     }
-
 
     @FXML
     void back(Event event) throws Exception {
@@ -88,6 +87,8 @@ public class AdminMainController extends Application {
 
             for (Option option : options) {
                 RadioButton option_radio = new RadioButton();
+                int num_lines = option.getOption().split("\n").length;
+                option_radio.setMinHeight(num_lines * 2.0 * (option_radio.fontProperty().get().getSize()));
                 option_radio.setText(option.getOption());
                 option_radio.setSelected(option.isCorrect());
                 question_box.getChildren().addLast(option_radio);
@@ -102,17 +103,26 @@ public class AdminMainController extends Application {
 
         // Save Button
         HBox buttonContainer = new HBox();
-        Button button = new Button("Save Question Set");
-        buttonContainer.getChildren().add(button);
+        buttonContainer.setSpacing(50.0);
         buttonContainer.setCenterShape(true);
         buttonContainer.setPadding(new Insets(20.0));
+
+        TextField questionSetDescription = new TextField();
+        questionSetDescription.prefWidth(300.0);
+
+        Button button = new Button("Save Question Set");
+        questionSetDescription.setPromptText("Question Set Description");
+
+        buttonContainer.getChildren().addFirst(questionSetDescription);
+        buttonContainer.getChildren().addLast(button);
+
         main_body.getChildren().addLast(buttonContainer);
     }
 
     private void openFile(File file) throws Exception {
         Scanner scanner = new Scanner(file);
         question_bank = QuestionParser.parseQuestion(scanner);
-        question_bank.print();
+        // question_bank.print();
         scanner.close();
     }
 }

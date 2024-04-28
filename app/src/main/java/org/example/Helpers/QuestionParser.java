@@ -31,7 +31,7 @@ public class QuestionParser {
                     if(!accumulator.equals("")) {
                         if(!isReadingQuestion) {
                             EOptionType option_type =  isCorrectOption ? EOptionType.CORRECT : EOptionType.INCORRECT;
-                            question.addOption(accumulator,  option_type);
+                            question.addOption(accumulator.trim(),  option_type);
                             question_bank.addQuestion(question);
                             question = new Question();
                             accumulator = "";
@@ -47,10 +47,10 @@ public class QuestionParser {
                 if(ch == '-' || ch == '@') {
                     if(!accumulator.equals("")) {
                         if(isReadingQuestion) {
-                        question.setQuestion(accumulator);
+                        question.setQuestion(accumulator.trim()+"\n\n");
                         } else {
                             EOptionType option_type =  isCorrectOption ? EOptionType.CORRECT : EOptionType.INCORRECT;
-                            question.addOption(accumulator, option_type);
+                            question.addOption(accumulator.trim(), option_type);
                         }
                     }
                     accumulator = "";
@@ -68,6 +68,10 @@ public class QuestionParser {
         }
         
         if(!question.getQuestion().trim().isEmpty()) {
+            if(!isReadingQuestion && ! accumulator.trim().equals("")) {
+                EOptionType option_type =  isCorrectOption ? EOptionType.CORRECT : EOptionType.INCORRECT;
+                question.addOption(accumulator.trim(),  option_type);
+            }
             question_bank.addQuestion(question);
         }
 
