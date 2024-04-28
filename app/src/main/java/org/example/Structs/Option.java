@@ -16,6 +16,9 @@ public class Option {
     public EOptionType getOptionType() {
         return option_type;
     }
+    public boolean isCorrect(){
+        return option_type == EOptionType.CORRECT;
+    }
     public void setOption(String option) {
         this.option = option;
     }

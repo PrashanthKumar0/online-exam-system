@@ -35,11 +35,15 @@
 # and this too bro
 
 + What is output of following program
+  ```
   public class Main() {
 	public static void main(String[] args){
 		System.out.println("Hello World!");
 	}
   }
+
+  ```
+  $$LaTeX$$
 
 @ Hello World!
 
