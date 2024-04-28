@@ -5,14 +5,29 @@ package org.example;
 // import org.example.Helpers.QuestionParser;
 // import org.example.Structs.QuestionBank;
 import org.example.Database.SQLDatabaseWrapper;
+import org.example.Model.QuestionModel;
+import org.example.Model.QuestionSetModel;
 
 
 public class Main {
     public static void main(String[] args) throws Exception {
         // test();
-        SQLDatabaseWrapper.connect();
+        initDatabase();
         App app = new App();
         app.run();
+    }
+
+
+    private static void initDatabase() throws Exception{
+        SQLDatabaseWrapper.connect();
+
+        // init all model
+        QuestionSetModel.init();
+        QuestionModel.init();
+
+        QuestionSetModel qsm = new QuestionSetModel("Hello World");
+        QuestionModel qm = new QuestionModel(qsm.getSetID(),"Hello World");
+        qm.setDescription("Hello Bhai");
     }
 
     static void test(){
