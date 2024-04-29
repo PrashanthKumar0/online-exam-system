@@ -4,7 +4,6 @@ import java.io.File;
 import javafx.fxml.FXML;
 import java.util.Scanner;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import javafx.scene.text.Text;
@@ -13,26 +12,23 @@ import javafx.event.ActionEvent;
 import javafx.stage.FileChooser;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.Node;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Separator;
-import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.RadioButton;
 
 import org.example.Structs.Option;
 import org.example.Structs.Question;
-import org.example.Helpers.SceneHelper;
 import org.example.Model.OptionModel;
 import org.example.Model.QuestionModel;
-import org.example.Model.QuestionSetModel;
+import org.example.Helpers.SceneHelper;
 import org.example.Structs.QuestionBank;
+import org.example.Model.QuestionSetModel;
 import org.example.Helpers.QuestionParser;
 
 public class AdminMainController extends Application {

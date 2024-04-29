@@ -1,10 +1,8 @@
 package org.example.Structs;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 
 import org.example.Model.QuestionModel;
-import org.example.Database.SQLDatabaseWrapper;
 
 public class QuestionBank {
     private ArrayList<Question> questions = new ArrayList<Question>();
