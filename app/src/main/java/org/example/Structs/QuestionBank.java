@@ -1,6 +1,10 @@
 package org.example.Structs;
 
+import java.sql.Connection;
 import java.util.ArrayList;
+
+import org.example.Model.QuestionModel;
+import org.example.Database.SQLDatabaseWrapper;
 
 public class QuestionBank {
     private ArrayList<Question> questions = new ArrayList<Question>();
@@ -11,6 +15,13 @@ public class QuestionBank {
     
     public ArrayList<Question> getQuestions() {
         return questions;
+    }
+
+
+    public static QuestionBank fromSetID(String setID) throws Exception{
+        QuestionBank qb = new QuestionBank();
+        qb.questions = QuestionModel.getAllQuestions(setID);
+        return qb;
     }
 
     public void print(){

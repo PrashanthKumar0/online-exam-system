@@ -1,8 +1,13 @@
 package org.example.Model;
 
+import java.util.ArrayList;
+import java.util.UUID;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.UUID;
+import java.sql.ResultSet;
+
+import org.example.Structs.Option;
+import org.example.Structs.Question;
 import org.example.Database.SQLDatabaseWrapper;
 
 public class QuestionModel {
@@ -57,12 +62,31 @@ public class QuestionModel {
         return q_id;
     }
 
-    public void setSetID(int set_id) {
-
-    }
-
     public String getDescription() {
         return desc;
+    }
+
+    public static ArrayList<Question> getAllQuestions(String setID) throws Exception {
+        ArrayList<Question> questions = new ArrayList<Question>();
+
+        Connection cnxn = SQLDatabaseWrapper.getConnection();
+        PreparedStatement pstmt = cnxn.prepareStatement(
+                "SELECT QID, Desc FROM " + tableName + " WHERE SetID = ?");
+        pstmt.setString(1, setID);
+
+        ResultSet res = pstmt.executeQuery();
+        while (res.next()) {
+            Question question = new Question();
+            question.setQuestion(res.getString("Desc"));
+            String QID = res.getString("QID");
+            ArrayList<Option> options = OptionModel.getAllOptions(QID);
+            for(Option option : options) {
+                question.addOption(option.getOption(), option.getOptionType());
+            }
+            questions.add(question);
+        }
+
+        return questions;
     }
 
     public String getSetID() {

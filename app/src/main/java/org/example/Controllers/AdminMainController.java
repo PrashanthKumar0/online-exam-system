@@ -4,6 +4,7 @@ import java.io.File;
 import javafx.fxml.FXML;
 import java.util.Scanner;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import javafx.scene.text.Text;
@@ -12,15 +13,25 @@ import javafx.event.ActionEvent;
 import javafx.stage.FileChooser;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Separator;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.RadioButton;
 
 import org.example.Structs.Option;
 import org.example.Structs.Question;
 import org.example.Helpers.SceneHelper;
+import org.example.Model.OptionModel;
+import org.example.Model.QuestionModel;
+import org.example.Model.QuestionSetModel;
 import org.example.Structs.QuestionBank;
 import org.example.Helpers.QuestionParser;
 
@@ -64,13 +75,90 @@ public class AdminMainController extends Application {
         File file = filechooser.showOpenDialog(stage);
         if (file != null) {
             openFile(file);
+
+            main_body.getChildren().clear();
             updateQuestionDom();
+            renderSaveQuestionSetControls();
         }
         // System.out.println("on upload question");
     }
 
-    private void updateQuestionDom() {
+    @FXML
+    void onShowTestSets(ActionEvent event) throws Exception {
         main_body.getChildren().clear();
+        renderTestSetList(main_body);
+    }
+
+    // -----------------------
+
+    private void renderSaveQuestionSetControls() {
+        // Save Button
+        HBox buttonContainer = new HBox();
+        buttonContainer.setSpacing(50.0);
+        buttonContainer.setCenterShape(true);
+        buttonContainer.setPadding(new Insets(20.0));
+
+        TextField questionSetDescription = new TextField();
+        questionSetDescription.setPrefWidth(450.0);
+
+        Button button = new Button("Save Question Set");
+        questionSetDescription.setPromptText("Question Set Description");
+
+        buttonContainer.getChildren().addFirst(questionSetDescription);
+        buttonContainer.getChildren().addLast(button);
+
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    saveQuestionSet(questionSetDescription.getText());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        main_body.getChildren().addLast(buttonContainer);
+    }
+
+    private void renderTestSetList(VBox body) throws Exception {
+        ComboBox<String> dropdown = new ComboBox<String>();
+        // dropdown.getItems().add("Hello");
+        ArrayList<QuestionSetModel> qs_array = QuestionSetModel.getAllQuestionSets();
+        for (QuestionSetModel qs : qs_array) {
+            dropdown.getItems().add(qs.getDescription());
+        }
+
+        // set onchange listener
+        dropdown
+                .getSelectionModel()
+                .selectedIndexProperty()
+                .addListener(new ChangeListener<Number>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Number> observable, Number oldIdx, Number newIdx) {
+                        // System.out.println("Selected :: " + newValue);
+                        try {
+                            String setID = qs_array.get(newIdx.intValue()).getSetID();
+                            question_bank = QuestionBank.fromSetID(setID);
+
+                            main_body.getChildren().clear();
+                            updateQuestionDom();
+                            body.getChildren().addFirst(dropdown);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        // dropdown.onchange
+
+        body.getChildren().addFirst(dropdown);
+
+    }
+
+    //
+    private void updateQuestionDom() throws Exception {
+
         ArrayList<Question> questions = question_bank.getQuestions();
         int question_number = 1;
         for (Question question : questions) {
@@ -79,7 +167,6 @@ public class AdminMainController extends Application {
             String question_str = String.format("Q%d) %s", question_number, question.getQuestion());
 
             Text question_tArea = new Text(question_str);
-            // question_tArea.maxHeight(1000.0);
 
             question_box.getChildren().addFirst(question_tArea);
 
@@ -101,22 +188,22 @@ public class AdminMainController extends Application {
             question_number++;
         }
 
-        // Save Button
-        HBox buttonContainer = new HBox();
-        buttonContainer.setSpacing(50.0);
-        buttonContainer.setCenterShape(true);
-        buttonContainer.setPadding(new Insets(20.0));
+    }
 
-        TextField questionSetDescription = new TextField();
-        questionSetDescription.prefWidth(300.0);
+    private void saveQuestionSet(String setDesc) throws Exception {
+        QuestionSetModel question_set_model = new QuestionSetModel(setDesc);
+        for (Question question : question_bank.getQuestions()) {
+            String question_desc = question.getQuestion();
+            QuestionModel question_model = new QuestionModel(question_set_model.getSetID(), question_desc);
 
-        Button button = new Button("Save Question Set");
-        questionSetDescription.setPromptText("Question Set Description");
+            for (Option option : question.getOptions()) {
+                String option_desc = option.getOption();
+                boolean is_correct_option = option.isCorrect();
+                // create option
+                new OptionModel(question_model.getQID(), option_desc, is_correct_option);
+            }
 
-        buttonContainer.getChildren().addFirst(questionSetDescription);
-        buttonContainer.getChildren().addLast(button);
-
-        main_body.getChildren().addLast(buttonContainer);
+        }
     }
 
     private void openFile(File file) throws Exception {

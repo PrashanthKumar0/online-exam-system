@@ -32,6 +32,7 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -68,11 +69,27 @@
    <left>
       <VBox prefHeight="671.0" prefWidth="210.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="upload_question_btn" mnemonicParsing="false" onAction="#onUploadQuestion" prefHeight="55.0" prefWidth="210.0" text="Upload New Questions" />
+            <Region prefHeight="23.0" prefWidth="210.0" />
+            <Button fx:id="upload_question_btn" mnemonicParsing="false" onAction="#onUploadQuestion" prefHeight="55.0" prefWidth="210.0" text="Upload New Questions">
+               <VBox.margin>
+                  <Insets left="12.0" right="12.0" />
+               </VBox.margin></Button>
             <Region prefHeight="16.0" prefWidth="210.0" />
-            <Button fx:id="test_overview_btn" mnemonicParsing="false" onAction="#onTestOverview" prefHeight="53.0" prefWidth="210.0" text="Test Overview" />
-            <Region prefHeight="16.0" prefWidth="210.0" />
-            <Button mnemonicParsing="false" onAction="#onEditStudents" prefHeight="52.0" prefWidth="210.0" text="Edit Students" />
+            <Button mnemonicParsing="false" onAction="#onShowTestSets" prefHeight="49.0" prefWidth="210.0" text="Test Sets Preview">
+               <VBox.margin>
+                  <Insets left="12.0" right="12.0" />
+               </VBox.margin>
+            </Button>
+            <Region prefHeight="23.0" prefWidth="210.0" />
+            <Button fx:id="test_overview_btn" mnemonicParsing="false" onAction="#onTestOverview" prefHeight="53.0" prefWidth="210.0" text="Test Overview">
+               <VBox.margin>
+                  <Insets left="12.0" right="12.0" />
+               </VBox.margin></Button>
+            <Region prefHeight="24.0" prefWidth="210.0" />
+            <Button mnemonicParsing="false" onAction="#onEditStudents" prefHeight="52.0" prefWidth="210.0" text="Edit Students">
+               <VBox.margin>
+                  <Insets left="12.0" right="12.0" />
+               </VBox.margin></Button>
          </children>
       </VBox>
    </left>

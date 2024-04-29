@@ -5,7 +5,7 @@ public class Option {
     private String option;
     private EOptionType option_type;
 
-    public Option(String option, EOptionType option_type){
+    public Option(String option, EOptionType option_type) {
         this.option = option;
         this.option_type = option_type;
     }
@@ -13,15 +13,19 @@ public class Option {
     public String getOption() {
         return option;
     }
+
     public EOptionType getOptionType() {
         return option_type;
     }
-    public boolean isCorrect(){
+
+    public boolean isCorrect() {
         return option_type == EOptionType.CORRECT;
     }
+
     public void setOption(String option) {
         this.option = option;
     }
+
     public void setOptionType(EOptionType option_type) {
         this.option_type = option_type;
     }
