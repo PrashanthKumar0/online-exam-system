@@ -13,10 +13,12 @@ import javafx.stage.FileChooser;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -108,6 +110,11 @@ public class AdminMainController extends Application {
             public void handle(ActionEvent event) {
                 try {
                     saveQuestionSet(questionSetDescription.getText());
+                    main_body.getChildren().clear();
+                    // SHOW SUCCESS ALERT BOX
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setContentText("Successfully Saved new question set");
+                    alert.show();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
