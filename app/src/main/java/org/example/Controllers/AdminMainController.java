@@ -43,6 +43,9 @@ public class AdminMainController extends Application {
     VBox main_body;
 
     @FXML
+    VBox right_container;
+
+    @FXML
     private Button test_overview_btn;
 
     @FXML

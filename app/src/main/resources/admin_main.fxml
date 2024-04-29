@@ -96,8 +96,15 @@
    <center>
       <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <content>
-            <VBox fx:id="main_body" prefHeight="660.0" prefWidth="1068.0" />
+            <VBox fx:id="main_body" prefHeight="668.0" prefWidth="715.0" />
          </content>
       </ScrollPane>
    </center>
+   <right>
+      <ScrollPane prefHeight="671.0" prefWidth="352.0" BorderPane.alignment="CENTER">
+         <content>
+            <VBox fx:id="right_container" prefHeight="669.0" prefWidth="350.0" />
+         </content>
+      </ScrollPane>
+   </right>
 </BorderPane>
