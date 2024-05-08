@@ -7,6 +7,7 @@ package org.example;
 import org.example.Model.OptionModel;
 import org.example.Model.QuestionModel;
 import org.example.Model.QuestionSetModel;
+import org.example.Model.StudentModel;
 import org.example.Database.SQLDatabaseWrapper;
 
 public class Main {
@@ -25,9 +26,10 @@ public class Main {
             // init all model
             QuestionSetModel.init();
             QuestionModel.init();
+            StudentModel.init();
             OptionModel.init();
 
-            test_db();
+            // test_db();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -37,9 +39,10 @@ public class Main {
     }
 
     static void test_db() throws Exception{
-        // QuestionSetModel qsm = new QuestionSetModel("Hello World");
-        // QuestionModel qm = new QuestionModel(qsm.getSetID(), "Hello World");
-        // OptionModel om = new OptionModel(qm.getQID(), "Hello World", true);
+        QuestionSetModel qsm = new QuestionSetModel("Hello World");
+        QuestionModel qm = new QuestionModel(qsm.getSetID(), "Hello World");
+        OptionModel om = new OptionModel(qm.getQID(), "Hello World", true);
+        StudentModel sm = new StudentModel("22/11/EC/040", "prashanth kumar", "anonymous0@jnu.ac.in");
         //// om.setDescription("Hello Bhai");
     }
 

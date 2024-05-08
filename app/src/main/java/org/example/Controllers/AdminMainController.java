@@ -1,11 +1,17 @@
 package org.example.Controllers;
 
 import java.io.File;
+import java.net.URL;
+
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+
 import java.util.Scanner;
 import javafx.event.Event;
 import javafx.stage.Stage;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
+
 import javafx.scene.text.Text;
 import javafx.geometry.Insets;
 import javafx.event.ActionEvent;
@@ -32,12 +38,15 @@ import org.example.Helpers.SceneHelper;
 import org.example.Structs.QuestionBank;
 import org.example.Model.QuestionSetModel;
 import org.example.Helpers.QuestionParser;
+import org.example.Helpers.StudentsManager;
 
-public class AdminMainController extends Application {
+public class AdminMainController extends Application implements Initializable{
 
     Stage stage;
     FileChooser filechooser = new FileChooser();
     QuestionBank question_bank = new QuestionBank();
+    StudentsManager students_manager = new StudentsManager();
+    StudentListRenderer student_list_renderer = new StudentListRenderer(students_manager);
 
     @FXML
     VBox main_body;
@@ -56,14 +65,29 @@ public class AdminMainController extends Application {
         this.stage = stage;
     }
 
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        student_list_renderer.render(right_container);
+    }
+
+
+
     @FXML
     void back(Event event) throws Exception {
         new SceneHelper().changeScene(IScenesInfo.main_scene, event);
     }
 
     @FXML
-    void onEditStudents(ActionEvent event) {
-        System.out.println("on edit students");
+    void onAddStudents(ActionEvent event) throws Exception{
+        File file = filechooser.showOpenDialog(stage);
+        if (file != null) {
+            Scanner scanner = new Scanner(file);
+            students_manager.parseAndSave(scanner);
+            // question_bank.print();
+            scanner.close();
+            student_list_renderer.render(right_container);
+        }
     }
 
     @FXML
@@ -218,4 +242,5 @@ public class AdminMainController extends Application {
         // question_bank.print();
         scanner.close();
     }
+
 }
