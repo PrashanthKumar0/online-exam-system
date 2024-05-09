@@ -12,23 +12,26 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.geometry.Insets;
 import javafx.event.ActionEvent;
 import javafx.stage.FileChooser;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.application.Application;
+import javafx.scene.control.RadioButton;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.RadioButton;
+import javafx.scene.control.Alert.AlertType;
 
 import org.example.Structs.Option;
 import org.example.Structs.Question;
@@ -40,7 +43,7 @@ import org.example.Model.QuestionSetModel;
 import org.example.Helpers.QuestionParser;
 import org.example.Helpers.StudentsManager;
 
-public class AdminMainController extends Application implements Initializable{
+public class AdminMainController extends Application implements Initializable {
 
     Stage stage;
     FileChooser filechooser = new FileChooser();
@@ -65,13 +68,10 @@ public class AdminMainController extends Application implements Initializable{
         this.stage = stage;
     }
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         student_list_renderer.render(right_container);
     }
-
-
 
     @FXML
     void back(Event event) throws Exception {
@@ -79,7 +79,7 @@ public class AdminMainController extends Application implements Initializable{
     }
 
     @FXML
-    void onAddStudents(ActionEvent event) throws Exception{
+    void onAddStudents(ActionEvent event) throws Exception {
         File file = filechooser.showOpenDialog(stage);
         if (file != null) {
             Scanner scanner = new Scanner(file);
@@ -173,6 +173,16 @@ public class AdminMainController extends Application implements Initializable{
 
                             main_body.getChildren().clear();
                             updateQuestionDom();
+
+                            // TODO : move in seperate function
+                            Button begin_test_button = new Button("Begin Test");
+                            body.getChildren().addLast(begin_test_button);
+
+                            begin_test_button.setOnAction((ActionEvent a) -> {
+                                beginTest(setID);
+                            });
+                            // ----------
+
                             body.getChildren().addFirst(dropdown);
 
                         } catch (Exception e) {
@@ -184,6 +194,47 @@ public class AdminMainController extends Application implements Initializable{
 
         body.getChildren().addFirst(dropdown);
 
+    }
+
+    private void beginTest(String setID) {
+        main_body.getChildren().clear();
+
+        renderTestInfo();
+        renderTestStudentList();
+
+    }
+
+    private void renderTestInfo() {
+        // Header
+        Label test_set_info_header = new Label("Test Set Info");
+        test_set_info_header.setCenterShape(true);
+        test_set_info_header.setFont(new Font(30.0));
+        main_body.getChildren().addLast(test_set_info_header);
+
+        GridPane grid = new GridPane();
+
+        grid.setHgap(10.0);
+
+        grid.addRow(0, new Label("Active Test Set"));
+        grid.addRow(0, new Label(question_bank.getSetDesctiption()));
+
+        grid.addRow(1, new Label("Number Of Questions"));
+        grid.addRow(1, new Label("" + question_bank.getQuestions().size()));
+
+
+        main_body.getChildren().addLast(grid);
+
+    }
+
+    private void renderTestStudentList() {
+        // Header
+        Label student_header = new Label("Students List");
+        student_header.setCenterShape(true);
+        student_header.setFont(new Font(30.0));
+        main_body.getChildren().addLast(student_header);
+
+        // Student List
+        new StudentListRenderer(students_manager).render(main_body, true);
     }
 
     //
@@ -210,6 +261,7 @@ public class AdminMainController extends Application implements Initializable{
                 option_radio.setSelected(option.isCorrect());
                 question_box.getChildren().addLast(option_radio);
             }
+
             question_box.getChildren().addLast(new Separator());
             question_box.setPadding(new Insets(20.0, 40.0, 20.0, 40.0));
             main_body.getChildren().addLast(question_box);

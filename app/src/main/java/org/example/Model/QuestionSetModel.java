@@ -76,8 +76,18 @@ public class QuestionSetModel {
         return desc;
     }
 
-    public static String getDescription(int set_id) {
-        // select from db by set_id
-        return "";
+    public static String getDescription(String set_id) throws Exception{
+        Connection cnxn = SQLDatabaseWrapper.getConnection();
+        PreparedStatement pstmt = cnxn.prepareStatement(
+            "SELECT Desc FROM " + tableName+ " WHERE SetID = ?;"
+        );
+        pstmt.setString(1, set_id);
+        ResultSet res = pstmt.executeQuery();
+
+        if(res.next()){
+            return res.getString("Desc");
+        }
+        
+        return "[ERR::INVALID_SET_SELECTED_TRY_AGAIN]";
     }
 }

@@ -92,9 +92,4 @@ public class QuestionModel {
     public String getSetID() {
         return set_id;
     }
-
-    public static String getDescription(int set_id) {
-        // select from db by set_id
-        return "";
-    }
 }
