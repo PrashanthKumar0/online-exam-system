@@ -2,28 +2,26 @@ package org.example.Controllers;
 
 import java.io.File;
 import java.net.URL;
-
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-
 import java.util.Scanner;
-import javafx.event.Event;
-import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import javafx.fxml.FXML;
+import javafx.event.Event;
+import javafx.stage.Stage;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.geometry.Insets;
 import javafx.event.ActionEvent;
 import javafx.stage.FileChooser;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.fxml.Initializable;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
@@ -201,7 +199,7 @@ public class AdminMainController extends Application implements Initializable {
 
         renderTestInfo();
         renderTestStudentList();
-
+        renderEndTestButton();
     }
 
     private void renderTestInfo() {
@@ -221,7 +219,6 @@ public class AdminMainController extends Application implements Initializable {
         grid.addRow(1, new Label("Number Of Questions"));
         grid.addRow(1, new Label("" + question_bank.getQuestions().size()));
 
-
         main_body.getChildren().addLast(grid);
 
     }
@@ -235,6 +232,19 @@ public class AdminMainController extends Application implements Initializable {
 
         // Student List
         new StudentListRenderer(students_manager).render(main_body, true);
+    }
+
+    private void renderEndTestButton() {
+        Button end_test_button = new Button("End Test");
+        main_body.getChildren().add(end_test_button);
+
+        end_test_button.setOnAction((ActionEvent e) -> {
+            onEndTest();
+        });
+    }
+
+    private void onEndTest(){
+        System.out.println("TEST OVER !!!!");
     }
 
     //

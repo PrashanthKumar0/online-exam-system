@@ -35,7 +35,8 @@ public class OptionModel {
 
         Connection cnxn = SQLDatabaseWrapper.getConnection();
         PreparedStatement pstmt = cnxn.prepareStatement(
-                "SELECT Desc , OptID, IsCorrect FROM " + tableName + " WHERE QID = ?");
+            "SELECT Desc , OptID, IsCorrect FROM " + tableName + " WHERE QID = ?"
+        );
 
         pstmt.setString(1, QID);
 
@@ -74,5 +75,16 @@ public class OptionModel {
             System.out.println("INSERTED : " + tableName + "#" + this.OptID + "(" + this.QID + ", " + this.desc + ")");
         }
         // pstmt.
+    }
+
+
+    public String getOptID() {
+        return OptID;
+    }
+    public String getDesc() {
+        return desc;
+    }
+    public String getQID() {
+        return QID;
     }
 }

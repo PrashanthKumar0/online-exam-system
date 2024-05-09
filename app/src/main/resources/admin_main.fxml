@@ -96,7 +96,7 @@
    <center>
       <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <content>
-            <VBox fx:id="main_body" prefHeight="668.0" prefWidth="715.0">
+            <VBox fx:id="main_body" prefHeight="668.0" prefWidth="614.0">
                <opaqueInsets>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </opaqueInsets>
@@ -107,9 +107,9 @@
       </ScrollPane>
    </center>
    <right>
-      <ScrollPane prefHeight="671.0" prefWidth="352.0" BorderPane.alignment="CENTER">
+      <ScrollPane prefHeight="671.0" prefWidth="450.0" BorderPane.alignment="CENTER">
          <content>
-            <VBox fx:id="right_container" prefHeight="669.0" prefWidth="350.0">
+            <VBox fx:id="right_container" prefHeight="669.0" prefWidth="448.0">
                <padding>
                   <Insets bottom="20.0" left="5.0" right="5.0" top="20.0" />
                </padding></VBox>
