@@ -90,7 +90,7 @@ public class QuestionModel {
     }
 
 
-    public static String getAllQuestionsRaw(String setID) throws Exception {
+    public static String getAllQuestionsRaw(String setID, boolean hideCorrect) throws Exception {
         String questions_raw = "";
 
         Connection cnxn = SQLDatabaseWrapper.getConnection();
@@ -105,7 +105,11 @@ public class QuestionModel {
             String QID = res.getString("QID");
             ArrayList<Option> options = OptionModel.getAllOptions(QID);
             for(Option option : options) {
-                questions_raw+=(option.isCorrect() ? "@ "  : "- ") + option.getOption() + "\n";
+                if(hideCorrect) {
+                    questions_raw+="- " + option.getOption() + "\n";
+                } else {
+                    questions_raw+=(option.isCorrect() ? "@ "  : "- ") + option.getOption() + "\n";
+                }
             }
         }
 

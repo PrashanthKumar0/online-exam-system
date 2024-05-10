@@ -2,15 +2,17 @@ package org.example.Controllers;
 
 import javafx.fxml.FXML;
 import javafx.event.Event;
-import javafx.event.ActionEvent;
 import javafx.scene.control.TextField;
 
-import org.example.Helpers.SceneHelper;
 import org.example.Server.Client;
+import org.example.Helpers.SceneHelper;
 
 public class StudentLoginController {
+
     public static Client client;
-    private String questionsRaw;
+    public static String testID;
+    public static String studentID;
+    public static String questionsRaw;
 
     @FXML
     TextField roll_number;
@@ -22,31 +24,28 @@ public class StudentLoginController {
     TextField test_id;
 
     @FXML
-    void proceedForTest(ActionEvent event) throws Exception {
+    void proceedForTest(Event event) throws Exception {
         if (!fetchQuestions()) {
             // show Alert box
             System.out.println("Failed Connecting");
             return;
         }
-        System.out.println("Connected");
-
+        new SceneHelper().changeScene(IScenesInfo.test_scene, event);
     }
 
     boolean fetchQuestions() throws Exception {
-        String testID = test_id.getText();
-        String studentID = roll_number.getText();
+        testID = test_id.getText();
+        studentID = roll_number.getText();
         String hostString = server_address.getText();
         client = new Client(hostString);
 
         String res = client.getQuestionsRaw(studentID, testID);
 
-        if (res == null) {
+        questionsRaw = res;
+
+        if (questionsRaw == null) {
             return false;
         }
-
-        System.out.println("QUESTIONS : \n" + res);
-
-        this.questionsRaw = res;
 
         return true;
     }
