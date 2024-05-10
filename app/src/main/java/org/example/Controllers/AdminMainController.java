@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.net.ServerSocket;
 
 import javafx.fxml.FXML;
 import javafx.event.Event;
@@ -30,14 +31,22 @@ import javafx.scene.control.RadioButton;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.MouseEvent;
 
 import org.example.Structs.Option;
 import org.example.Structs.Question;
 import org.example.Model.OptionModel;
 import org.example.Model.QuestionModel;
 import org.example.Helpers.SceneHelper;
+import org.example.Helpers.ServerHelper;
 import org.example.Structs.QuestionBank;
 import org.example.Model.QuestionSetModel;
+import org.example.Model.StudentModel;
+import org.example.Model.TestCandidatesModel;
+import org.example.Model.TestModel;
+import org.example.Server.ServerMain;
 import org.example.Helpers.QuestionParser;
 import org.example.Helpers.StudentsManager;
 
@@ -48,6 +57,10 @@ public class AdminMainController extends Application implements Initializable {
     QuestionBank question_bank = new QuestionBank();
     StudentsManager students_manager = new StudentsManager();
     StudentListRenderer student_list_renderer = new StudentListRenderer(students_manager);
+
+    private static ServerMain serverMain;
+
+    TestModel test;
 
     @FXML
     VBox main_body;
@@ -110,6 +123,29 @@ public class AdminMainController extends Application implements Initializable {
     void onShowTestSets(ActionEvent event) throws Exception {
         main_body.getChildren().clear();
         renderTestSetList(main_body);
+    }
+
+    // -----------------------
+    private static void initializeServer() {
+        // spawn a new server thread
+        if (serverMain == null) {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        ServerSocket serverSocket = new ServerSocket(1000);
+                        serverMain = new ServerMain(serverSocket);
+                        System.out.println("Server Listening on : " + ServerHelper.getLocalIpAddress() + ":1000");
+                        serverMain.run();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            });
+
+            thread.start();
+        } // if
     }
 
     // -----------------------
@@ -195,11 +231,30 @@ public class AdminMainController extends Application implements Initializable {
     }
 
     private void beginTest(String setID) {
-        main_body.getChildren().clear();
+        try {
 
-        renderTestInfo();
-        renderTestStudentList();
-        renderEndTestButton();
+            initializeServer();
+            test = new TestModel(setID);
+            test.activateTest();
+            insertSelectedStudents();
+            
+            main_body.getChildren().clear();
+            renderTestInfo();
+            renderTestStudentList();
+            renderEndTestButton();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void insertSelectedStudents() throws Exception {
+        ArrayList<StudentModel> students = students_manager.getStudents();
+        for(StudentModel student : students) {
+            if(student.isSelected()) {
+                new TestCandidatesModel(test.getTestID(), student.getRoll());
+            }
+        } 
     }
 
     private void renderTestInfo() {
@@ -208,6 +263,10 @@ public class AdminMainController extends Application implements Initializable {
         test_set_info_header.setCenterShape(true);
         test_set_info_header.setFont(new Font(30.0));
         main_body.getChildren().addLast(test_set_info_header);
+
+        Label test_id_label = new Label(test.getTestID());
+        Label question_set_label = new Label("" + test.getQuestionSetId());
+        Label server_address_label = new Label("" + ServerHelper.getLocalIpAddress());
 
         GridPane grid = new GridPane();
 
@@ -219,8 +278,37 @@ public class AdminMainController extends Application implements Initializable {
         grid.addRow(1, new Label("Number Of Questions"));
         grid.addRow(1, new Label("" + question_bank.getQuestions().size()));
 
+        grid.addRow(2, new Label("Active TestID"));
+        grid.addRow(2, test_id_label);
+
+        grid.addRow(3, new Label("Server Address"));
+        grid.addRow(3, server_address_label);
+
+        grid.addRow(4, new Label("SetId"));
+        grid.addRow(4, question_set_label);
+
         main_body.getChildren().addLast(grid);
 
+        // click to copy
+        test_id_label.setOnMouseClicked((e) -> {
+            copyToClipboard(test_id_label.getText());
+        });
+
+        server_address_label.setOnMouseClicked((e) -> {
+            copyToClipboard(server_address_label.getText());
+        });
+
+        question_set_label.setOnMouseClicked((e) -> {
+            copyToClipboard(question_set_label.getText());
+        });
+
+    }
+
+    private void copyToClipboard(String message) {
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        ClipboardContent content = new ClipboardContent();
+        content.putString(message);
+        clipboard.setContent(content);
     }
 
     private void renderTestStudentList() {
@@ -243,7 +331,16 @@ public class AdminMainController extends Application implements Initializable {
         });
     }
 
-    private void onEndTest(){
+    private void onEndTest() {
+        if (serverMain != null) {
+            try {
+                test.deActivateTest();
+                serverMain = null;
+                serverMain.kill();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         System.out.println("TEST OVER !!!!");
     }
 

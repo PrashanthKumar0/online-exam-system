@@ -3,6 +3,7 @@ package org.example.Model;
 import java.util.UUID;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import org.example.Database.SQLDatabaseWrapper;
 
@@ -45,6 +46,23 @@ public class TestCandidatesModel {
             System.out.println("CREATED : " + tableName + "(#" + this.id + ", TestID : " + this.test_id + ", StudentID" + this.student_id + ");");
         }
     }
+
+    public static boolean canStudentGiveTest(String testID, String studentID) throws Exception {
+        Connection cnxn = SQLDatabaseWrapper.getConnection();
+        PreparedStatement pstmt = cnxn.prepareStatement(
+            "SELECT ID FROM "+tableName+" WHERE TestID = ? AND StudentID = ?;"
+        );
+
+        pstmt.setString(1, testID);
+        pstmt.setString(2, studentID);
+        
+        ResultSet res = pstmt.executeQuery();
+        if(res.next()){
+            return true;
+        }
+        return false;
+    }
+
 
     public String getTestID() {
         return test_id;

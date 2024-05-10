@@ -89,6 +89,30 @@ public class QuestionModel {
         return questions;
     }
 
+
+    public static String getAllQuestionsRaw(String setID) throws Exception {
+        String questions_raw = "";
+
+        Connection cnxn = SQLDatabaseWrapper.getConnection();
+        PreparedStatement pstmt = cnxn.prepareStatement(
+                "SELECT QID, Desc FROM " + tableName + " WHERE SetID = ?"
+        );
+        pstmt.setString(1, setID);
+
+        ResultSet res = pstmt.executeQuery();
+        while (res.next()) {
+            questions_raw += "+ "+res.getString("Desc")+"\n";
+            String QID = res.getString("QID");
+            ArrayList<Option> options = OptionModel.getAllOptions(QID);
+            for(Option option : options) {
+                questions_raw+=(option.isCorrect() ? "@ "  : "- ") + option.getOption() + "\n";
+            }
+        }
+
+        return questions_raw;
+    }
+
+
     public String getSetID() {
         return set_id;
     }
