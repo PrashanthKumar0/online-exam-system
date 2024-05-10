@@ -54,7 +54,7 @@ public class ClientHandler implements Runnable {
 
             // * on successful server sends questions
             sendMessage(IServerResponses.connected);
-            sendMessage(QuestionModel.getAllQuestionsRaw(test.getQuestionSetId()));
+            sendMessage(QuestionModel.getAllQuestionsRaw(test.getQuestionSetId(), true));
             sendMessage(IServerResponses.endResponseSignature);
             System.out.println("Sent QuestionSet#" + test.getQuestionSetId() + " to Student(" + studentID + ")");
             clientHandlers.add(this);
