@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventType;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.fxml.Initializable;
@@ -40,9 +42,10 @@ public class TestSceneController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        System.out.println(StudentLoginController.questionsRaw);
         Scanner scanner = new Scanner(StudentLoginController.questionsRaw);
-        questionBank = QuestionParser.parseQuestion(scanner);
-
+        questionBank = QuestionParser.parseQuestion(scanner, true);
+        System.out.println("NUM Q : " + questionBank.getQuestions().size());
         try {
             renderQuestion();
         } catch (Exception e) {
@@ -72,6 +75,16 @@ public class TestSceneController implements Initializable {
                 option_radio.setText(option.getOption());
                 option_radio.setSelected(option.isCorrect());
                 question_box.getChildren().addLast(option_radio);
+
+
+                option_radio.setOnAction((action) -> {
+                    if(option_radio.selectedProperty().get()) {
+                        System.out.println("Select : #(" + option.getId() + ")  " + option.getOption());
+                        // option.setSelected(true);
+                    } else {
+                        // option.setSelected(false);
+                    }
+                });
             }
 
             question_box.getChildren().addLast(new Separator());

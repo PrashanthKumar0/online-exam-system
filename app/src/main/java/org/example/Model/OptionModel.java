@@ -44,10 +44,11 @@ public class OptionModel {
 
         while (res.next()){
             String option_str = res.getString("Desc");
-            // String OptID = res.getString("OptID");
+            String OptID = res.getString("OptID");
             boolean isCorrect = res.getBoolean("IsCorrect");
             EOptionType option_type = isCorrect ? EOptionType.CORRECT : EOptionType.INCORRECT;
             Option option = new Option(option_str, option_type);
+            option.setId(OptID);
             options.add(option);
         }
 

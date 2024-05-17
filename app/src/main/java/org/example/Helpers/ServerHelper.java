@@ -14,6 +14,8 @@ public class ServerHelper {
         }catch(Exception e){
 
         }
+        if(ip_address == null) return "127.0.0.1";
+        
         return ip_address;
     }    
 

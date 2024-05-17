@@ -4,8 +4,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 import java.net.ServerSocket;
+import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.event.Event;
@@ -22,6 +22,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
+import javafx.scene.input.Clipboard;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Separator;
@@ -30,25 +31,23 @@ import javafx.application.Application;
 import javafx.scene.control.RadioButton;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.Alert.AlertType;
 
 import org.example.Structs.Option;
+import org.example.Model.TestModel;
 import org.example.Structs.Question;
+import org.example.Server.ServerMain;
 import org.example.Model.OptionModel;
+import org.example.Model.StudentModel;
 import org.example.Model.QuestionModel;
 import org.example.Helpers.SceneHelper;
 import org.example.Helpers.ServerHelper;
 import org.example.Structs.QuestionBank;
-import org.example.Model.QuestionSetModel;
-import org.example.Model.StudentModel;
-import org.example.Model.TestCandidatesModel;
-import org.example.Model.TestModel;
-import org.example.Server.ServerMain;
 import org.example.Helpers.QuestionParser;
+import org.example.Model.QuestionSetModel;
 import org.example.Helpers.StudentsManager;
+import org.example.Model.TestCandidatesModel;
 
 public class AdminMainController extends Application implements Initializable {
 
@@ -284,8 +283,8 @@ public class AdminMainController extends Application implements Initializable {
         grid.addRow(3, new Label("Server Address"));
         grid.addRow(3, server_address_label);
 
-        grid.addRow(4, new Label("SetId"));
-        grid.addRow(4, question_set_label);
+        // grid.addRow(4, new Label("SetId"));
+        // grid.addRow(4, question_set_label);
 
         main_body.getChildren().addLast(grid);
 

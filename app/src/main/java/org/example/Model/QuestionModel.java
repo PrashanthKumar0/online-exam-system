@@ -106,7 +106,9 @@ public class QuestionModel {
             ArrayList<Option> options = OptionModel.getAllOptions(QID);
             for(Option option : options) {
                 if(hideCorrect) {
-                    questions_raw+="- " + option.getOption() + "\n";
+                    //! NOTE : - [OptionID] option value
+                    //! is the format
+                    questions_raw+="- [" + option.getId() + "] " + option.getOption() + "\n";
                 } else {
                     questions_raw+=(option.isCorrect() ? "@ "  : "- ") + option.getOption() + "\n";
                 }

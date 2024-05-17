@@ -1,9 +1,9 @@
 package org.example;
 
-// import java.io.File;
-// import java.util.Scanner;
-// import org.example.Helpers.QuestionParser;
-// import org.example.Structs.QuestionBank;
+import java.io.File;
+import java.util.Scanner;
+import org.example.Helpers.QuestionParser;
+import org.example.Structs.QuestionBank;
 
 import org.example.Model.TestModel;
 import org.example.Model.OptionModel;
@@ -26,12 +26,12 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         // test();
+
         initDatabase();
         // initializeServer();
 
         App app = new App();
         app.run();
-
     }
 
     // private static void initializeServer() {
@@ -85,13 +85,12 @@ public class Main {
         //// om.setDescription("Hello Bhai");
     }
 
-    static void test() {
-        // System.err.println("__________BEGIN TEST_________________");
-        // File file = new File("C:\\Users\\Prashanth
-        // Kumar\\Desktop\\sample_questions.txt");
-        // Scanner sc = new Scanner(file);
-        // QuestionBank qb = QuestionParser.parseQuestion(sc);
-        // qb.print();
-        // sc.close();
-    }
+    // static void test()  throws Exception {
+    //     System.err.println("__________BEGIN TEST_________________");
+    //     File file = new File("C:\\Users\\Prashanth Kumar\\Desktop\\sample_questions.txt");
+    //     Scanner sc = new Scanner(file);
+    //     QuestionBank qb = QuestionParser.parseQuestion(sc);
+    //     qb.print();
+    //     sc.close();
+    // }
 }

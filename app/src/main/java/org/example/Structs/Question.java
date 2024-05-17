@@ -20,6 +20,13 @@ public class Question {
         options.add(new Option(option, option_type));
     }
 
+    public void addOption(String option, String OptionID,EOptionType option_type) {
+        if(option_type==EOptionType.CORRECT) num_correct_opts++;
+        Option option_obj = new Option(option, option_type);
+        option_obj.setId(OptionID);
+        options.add(option_obj);
+    }
+
     public ArrayList<Option> getOptions() {
         return options;
     }
