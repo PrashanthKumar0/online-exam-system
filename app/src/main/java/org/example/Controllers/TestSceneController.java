@@ -22,6 +22,7 @@ import org.example.Structs.Option;
 import org.example.Structs.Question;
 import org.example.Structs.QuestionBank;
 import org.example.Helpers.QuestionParser;
+import org.example.Server.Client;
 
 public class TestSceneController implements Initializable {
     private QuestionBank questionBank;
@@ -76,13 +77,16 @@ public class TestSceneController implements Initializable {
                 option_radio.setSelected(option.isCorrect());
                 question_box.getChildren().addLast(option_radio);
 
-
                 option_radio.setOnAction((action) -> {
-                    if(option_radio.selectedProperty().get()) {
-                        System.out.println("Select : #(" + option.getId() + ")  " + option.getOption());
-                        // option.setSelected(true);
-                    } else {
-                        // option.setSelected(false);
+                    try {
+                        if (option_radio.selectedProperty().get()) {
+                            System.out.println("Select : #(" + option.getId() + ")  " + option.getOption());
+                            Client.sendMessage("+" + option.getId());
+                        } else {
+                            Client.sendMessage("-" + option.getId());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 });
             }

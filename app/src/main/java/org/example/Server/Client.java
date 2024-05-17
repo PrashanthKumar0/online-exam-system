@@ -9,16 +9,16 @@ import java.net.InetSocketAddress;
 
 public class Client {
     Socket socket;
-    private BufferedReader bufferedReader;
-    private BufferedWriter bufferedWriter;
+    private static BufferedReader bufferedReader;
+    private static BufferedWriter bufferedWriter;
 
     // Will be passed from gui app
     public Client(String hostString) throws Exception {
         InetSocketAddress address = new InetSocketAddress(hostString, 1000);
         this.socket = new Socket(address.getAddress(), address.getPort());
 
-        this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
-        this.bufferedReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+        bufferedWriter = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
+        bufferedReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 
     }
 
@@ -44,9 +44,9 @@ public class Client {
         return null;
     }
 
-    public void sendMessage(String message) throws Exception{
-        this.bufferedWriter.write(message, 0, message.length());
-        this.bufferedWriter.newLine();
-        this.bufferedWriter.flush();
+    public static void sendMessage(String message) throws Exception{
+        bufferedWriter.write(message, 0, message.length());
+        bufferedWriter.newLine();
+        bufferedWriter.flush();
     }
 }

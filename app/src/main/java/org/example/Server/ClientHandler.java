@@ -100,14 +100,16 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         // ! listen for client actions
-        String messageFromClient;
-
         while (socket.isConnected()) {
             try {
-                // messageFromClient = bufferedReader.readLine();
-                // TODO : parse this message from client
-                // * i need to make a parser for this too that interprets client message
+                String messageFromClient = bufferedReader.readLine();
 
+                String OptionID = messageFromClient.substring(1);
+                if(messageFromClient.startsWith("-")) {
+                    System.out.println("Client Unselected OptionID#("+OptionID+")");
+                } else{
+                    System.out.println("Client Selected OptionID#("+OptionID+")");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 closeEverything();
