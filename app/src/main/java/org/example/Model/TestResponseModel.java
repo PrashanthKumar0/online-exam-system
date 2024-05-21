@@ -51,6 +51,23 @@ public class TestResponseModel {
         }
     }
 
+
+    public static void remove(String studentID, String OptionID, String testID) throws Exception {
+        Connection cnxn = SQLDatabaseWrapper.getConnection();
+        PreparedStatement stmt = cnxn.prepareStatement(
+            "DELETE FROM " + tableName + " WHERE TestID = ? AND OptionID = ? AND StudentID = ?"
+        );
+
+        stmt.setString(1, testID);
+        stmt.setString(2, OptionID);
+        stmt.setString(3, studentID);
+
+        if(stmt.executeUpdate() > 0) {
+            System.out.println("REMOVED OPTION " + OptionID + " FROM STUDENT  " + studentID +" In test " + testID);
+        }
+    }
+
+
     public String getOptionId() {
         return option_id;
     }

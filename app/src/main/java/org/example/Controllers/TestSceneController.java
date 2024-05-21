@@ -6,23 +6,20 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
-import javafx.beans.value.ChangeListener;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventType;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.layout.VBox;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.Separator;
+import javafx.scene.control.RadioButton;
 
+import org.example.Server.Client;
 import org.example.Structs.Option;
 import org.example.Structs.Question;
 import org.example.Structs.QuestionBank;
 import org.example.Helpers.QuestionParser;
-import org.example.Server.Client;
 
 public class TestSceneController implements Initializable {
     private QuestionBank questionBank;
@@ -79,12 +76,19 @@ public class TestSceneController implements Initializable {
 
                 option_radio.setOnAction((action) -> {
                     try {
+                        // order must be same 😢
+                        // message is handled in ClientHandler in the same order
+                        // (+/-) OptionID    + says selected - says removed
+                        // StudentID
+                        // testID
                         if (option_radio.selectedProperty().get()) {
                             System.out.println("Select : #(" + option.getId() + ")  " + option.getOption());
                             Client.sendMessage("+" + option.getId());
                         } else {
                             Client.sendMessage("-" + option.getId());
                         }
+                        Client.sendMessage(StudentLoginController.studentID); // order is important
+                        Client.sendMessage(StudentLoginController.testID); // order is important
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

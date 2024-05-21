@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import org.example.Model.TestModel;
+import org.example.Model.TestResponseModel;
 import org.example.Model.QuestionModel;
 import org.example.Model.TestCandidatesModel;
 
@@ -103,12 +104,29 @@ public class ClientHandler implements Runnable {
         while (socket.isConnected()) {
             try {
                 String messageFromClient = bufferedReader.readLine();
+                
+                if(messageFromClient.equals(IServerResponses.endResponseSignature)) {
+                    closeEverything();
+                    break;
+                }
 
                 String OptionID = messageFromClient.substring(1);
+                String studentID = bufferedReader.readLine();
+                String testID = bufferedReader.readLine();
+                if(!TestCandidatesModel.canStudentGiveTest(testID,studentID)) {
+                    continue;
+                }
+
                 if(messageFromClient.startsWith("-")) {
-                    System.out.println("Client Unselected OptionID#("+OptionID+")");
-                } else{
-                    System.out.println("Client Selected OptionID#("+OptionID+")");
+                    System.out.println("- Client Unselected OptionID#(" + OptionID + ")  StudentID("+studentID+")  testID(" + testID + ")");
+                    TestResponseModel.remove(studentID, OptionID, testID);
+                } else {
+                    try {
+                        new TestResponseModel(studentID,OptionID,testID);
+                    } catch(Exception e) {
+                        //! not actually exception? we just ignore if record is already in response
+                    }
+                    System.out.println("+ Client Selected OptionID#(" + OptionID + ")  StudentID("+studentID+")  testID(" + testID + ")");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
