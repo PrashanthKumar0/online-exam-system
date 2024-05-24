@@ -1,60 +1,64 @@
 
+
 # comments begin with # symbol
 # ---- TEST FILE -----
-# Author : Prashanth
-# ROLL : 22/11/EC/050
-# SUB : DBMS TEST
+# Author : ABCD
+# ROLL : XX/YY/ZZ/WW
+# SUB : OOPS PROJECT
 # ---------------------
 # initial whitespaces are ignored
 
 
 
+#------------------------|
+#  Non programming quizz |
+#------------------------|
+
++ Which of these is the capital of France?
+- London
+@ Paris
+- Madrid
+- Rome
+
++ What is the chemical symbol for gold?
+@ Au
+- Ag
+- Fe
+- Cu
+
+#####################
+# Programming quizz #
+#####################
+
++ what is the output of the following php code
+  <?php
+    echo "Hello" . "World!";
+  ?>
+
+- Hello World!
+@ HelloWorld!
+- Hello World
+- HelloWorld
+
++ Which of the following is not a primitive data type in Java?
+- int
+- boolean
+@ String
+- float
+
++ Which of the following is a loop structure in C++?
+
+- for
+- while
+- do-while
+@ All of the above
 
 
++ Which of the following is NOT a valid data type in C?
 
-
-
-
-
-+ Who is PM of india
-+ (will this be added?) to ques
-	hmm...
-@ Narendra modi
-- Prashanth Kumar
-- Salman Khan
-
-# This is comment 
-+ What is a cat?
-@ Animal
-- Bird
-- Insect
-
-
-
-# okay okay ? this part will be ignored
-# and this too bro
-
-+ What is output of following program
-  ```
-  public class Main() {
-	public static void main(String[] args){
-		System.out.println("Hello World!");
-	}
-  }
-
-  ```
-  $$LaTeX$$
-
-@ Hello World!
-
-- Hey World
-
-- Hell World
-
-- HELLO 
-  WORLD!
- (in Light Green color)
-
-- Yello World!
+- int
+- float
+- bool
+@ integer
 
 
