@@ -1,10 +1,12 @@
 package org.example.Model;
 
 import java.util.UUID;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
+import org.example.Structs.Student;
 import org.example.Database.SQLDatabaseWrapper;
 
 public class TestCandidatesModel {
@@ -61,6 +63,28 @@ public class TestCandidatesModel {
             return true;
         }
         return false;
+    }
+
+
+    public static ArrayList<StudentModel> getAllStudentsFromTestID(String testID) throws Exception {
+        ArrayList<StudentModel> candidates = new ArrayList<>();
+
+        Connection cnxn = SQLDatabaseWrapper.getConnection();
+        PreparedStatement pstmt = cnxn.prepareStatement(
+            "SELECT StudentID from " + tableName+ " Where TestID = ?;"
+        );
+        pstmt.setString(1, testID);
+
+        ResultSet res = pstmt.executeQuery();
+
+        while(res.next()) {
+            String studentID = res.getString("StudentID");
+            StudentModel.fromStudentID(studentID, testID);
+        }
+
+
+
+        return candidates;
     }
 
 

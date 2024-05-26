@@ -28,6 +28,15 @@ public class StudentsManager {
         }
     }
 
+    public StudentModel getStudentById(String studentID){
+        for(StudentModel student : this.students) {
+            if(student.getRoll().equals(studentID)){ 
+                return student;
+            }
+        }
+        return null;
+    }
+
     public boolean isEmpty() {
         return this.students.isEmpty();
     }

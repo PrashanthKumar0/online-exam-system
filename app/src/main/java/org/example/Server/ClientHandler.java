@@ -9,7 +9,11 @@ import java.io.OutputStreamWriter;
 
 import org.example.Model.TestModel;
 import org.example.Model.TestResponseModel;
+import org.example.Structs.QuestionBank;
+import org.example.Structs.Student;
+import org.example.Controllers.AdminMainController;
 import org.example.Model.QuestionModel;
+import org.example.Model.StudentModel;
 import org.example.Model.TestCandidatesModel;
 
 public class ClientHandler implements Runnable {
@@ -22,6 +26,9 @@ public class ClientHandler implements Runnable {
     private String testID;
     private String studentID;
 
+    private boolean isRootClient = false;
+    private static boolean isRootConected = false;
+
     public ClientHandler(Socket socket) {
         this.socket = socket;
         try {
@@ -33,6 +40,18 @@ public class ClientHandler implements Runnable {
 
             String[] res = this.bufferedReader.readLine().split(":");
             // System.out.println("RES LEN : "+res.length);
+
+            if (res[0].equals(IServerResponses.rootClientHandshake)) {
+                if (!ClientHandler.isRootConected) {
+                    isRootClient = true;
+                    ClientHandler.isRootConected = true;
+                    sendMessage(IServerResponses.connected);
+                } else {
+                    sendMessage(IServerResponses.failedConnecting);
+                    System.out.println("Root Client already connected");
+                }
+                return;
+            }
 
             this.testID = res[0];
             this.studentID = res[1];
@@ -103,36 +122,63 @@ public class ClientHandler implements Runnable {
         // ! listen for client actions
         while (socket.isConnected()) {
             try {
-                String messageFromClient = bufferedReader.readLine();
-                
-                if(messageFromClient.equals(IServerResponses.endResponseSignature)) {
-                    closeEverything();
-                    break;
-                }
-
-                String OptionID = messageFromClient.substring(1);
-                String studentID = bufferedReader.readLine();
-                String testID = bufferedReader.readLine();
-                if(!TestCandidatesModel.canStudentGiveTest(testID,studentID)) {
-                    continue;
-                }
-
-                if(messageFromClient.startsWith("-")) {
-                    System.out.println("- Client Unselected OptionID#(" + OptionID + ")  StudentID("+studentID+")  testID(" + testID + ")");
-                    TestResponseModel.remove(studentID, OptionID, testID);
+                if (isRootClient) {
+                    handleRootClient();
                 } else {
-                    try {
-                        new TestResponseModel(studentID,OptionID,testID);
-                    } catch(Exception e) {
-                        //! not actually exception? we just ignore if record is already in response
-                    }
-                    System.out.println("+ Client Selected OptionID#(" + OptionID + ")  StudentID("+studentID+")  testID(" + testID + ")");
+                    handleNormalClient();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 closeEverything();
                 break;
             }
+
         }
     }
+
+    void handleRootClient() throws Exception {
+        String messageFromClient = bufferedReader.readLine();
+        String getStudentInfoRoute = "/get-students-info";
+        if (messageFromClient.startsWith(getStudentInfoRoute)) {
+            messageFromClient = messageFromClient.substring(getStudentInfoRoute.length());
+            String testID = messageFromClient.trim();
+            ArrayList<StudentModel> students = TestCandidatesModel.getAllStudentsFromTestID(testID);
+            for (StudentModel student : students) {
+                String res = student.getRoll() + "," + student.getName() + "," + student.getRoll() + "," + student.getMarks();
+                sendMessage(res);
+            }
+            sendMessage(IServerResponses.endResponseSignature);
+        }
+    }
+
+    private void handleNormalClient() throws Exception {
+        String messageFromClient = bufferedReader.readLine();
+
+        if (messageFromClient.equals(IServerResponses.endResponseSignature)) {
+            // send final score
+            // TODO : remove from TestCandidatesModel
+            closeEverything();
+            return;
+        }
+
+        String OptionID = messageFromClient.substring(1);
+        String studentID = bufferedReader.readLine();
+        String testID = bufferedReader.readLine();
+        if (!TestCandidatesModel.canStudentGiveTest(testID, studentID)) {
+            return;
+        }
+
+        if (messageFromClient.startsWith("-")) {
+            System.out.println("- Client Unselected OptionID#(" + OptionID + ")  StudentID(" + studentID + ")  testID(" + testID + ")");
+            TestResponseModel.remove(studentID, OptionID, testID);
+        } else {
+            try {
+                new TestResponseModel(studentID, OptionID, testID);
+            } catch (Exception e) {
+                // ! not actually exception? we just ignore if record is already in response
+            }
+            System.out.println("+ Client Selected OptionID#(" + OptionID + ")  StudentID(" + studentID + ")  testID(" + testID + ")");
+        }
+    }
+
 }

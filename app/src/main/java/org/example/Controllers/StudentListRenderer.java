@@ -37,11 +37,18 @@ public class StudentListRenderer {
             }
             Label name = new Label(student.getName());
             Label email = new Label(student.getEmail());
+            Label marks = null;
 
             CheckBox check_box = new CheckBox(student.getRoll());
             check_box.setSelected(student.isSelected());
 
             if (checked_only) {
+                String marks_txt = "(Not Yet Connected)";
+                if(student.num_correct_response >= 0) {
+                    marks_txt = String.valueOf(student.num_correct_response);
+                }
+                marks = new Label(marks_txt);
+                
                 grid.addRow(idx, new Label(student.getRoll()));
             } else {
                 grid.addRow(idx, check_box);
@@ -49,6 +56,7 @@ public class StudentListRenderer {
 
             grid.addRow(idx, name);
             grid.addRow(idx, email);
+            if(marks != null) grid.addRow(idx, marks);
 
             check_box.selectedProperty().addListener(
                     (ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) -> {

@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.event.Event;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.geometry.Insets;
@@ -27,16 +28,22 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.scene.control.RadioButton;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Service;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.control.Alert.AlertType;
 
 import org.example.Structs.Option;
 import org.example.Model.TestModel;
+import org.example.Model.TestResponseModel;
 import org.example.Structs.Question;
+import org.example.Server.Client;
+import org.example.Server.IServerResponses;
 import org.example.Server.ServerMain;
 import org.example.Model.OptionModel;
 import org.example.Model.StudentModel;
@@ -54,10 +61,11 @@ public class AdminMainController extends Application implements Initializable {
     Stage stage;
     FileChooser filechooser = new FileChooser();
     QuestionBank question_bank = new QuestionBank();
-    StudentsManager students_manager = new StudentsManager();
+    public static StudentsManager students_manager = new StudentsManager();
     StudentListRenderer student_list_renderer = new StudentListRenderer(students_manager);
 
     private static ServerMain serverMain;
+    private static Client rootClient;
 
     TestModel test;
 
@@ -125,7 +133,7 @@ public class AdminMainController extends Application implements Initializable {
     }
 
     // -----------------------
-    private static void initializeServer() {
+    private static void initializeServer() throws Exception {
         // spawn a new server thread
         if (serverMain == null) {
             Thread thread = new Thread(new Runnable() {
@@ -145,6 +153,15 @@ public class AdminMainController extends Application implements Initializable {
 
             thread.start();
         } // if
+
+        AdminMainController.rootClient = new Client(ServerHelper.getLocalIpAddress());
+        Client.sendMessage(IServerResponses.rootClientHandshake);
+        String cnxnStatus = Client.readLine();
+        if (!cnxnStatus.equals(IServerResponses.connected)) {
+            throw new Exception("Unable to spin up root client");
+        } else {
+            System.out.println("Root Client Connected Successfully");
+        }
     }
 
     // -----------------------
@@ -236,7 +253,7 @@ public class AdminMainController extends Application implements Initializable {
             test = new TestModel(setID);
             test.activateTest();
             insertSelectedStudents();
-            
+
             main_body.getChildren().clear();
             renderTestInfo();
             renderTestStudentList();
@@ -249,11 +266,11 @@ public class AdminMainController extends Application implements Initializable {
 
     private void insertSelectedStudents() throws Exception {
         ArrayList<StudentModel> students = students_manager.getStudents();
-        for(StudentModel student : students) {
-            if(student.isSelected()) {
+        for (StudentModel student : students) {
+            if (student.isSelected()) {
                 new TestCandidatesModel(test.getTestID(), student.getRoll());
             }
-        } 
+        }
     }
 
     private void renderTestInfo() {
@@ -317,8 +334,30 @@ public class AdminMainController extends Application implements Initializable {
         student_header.setFont(new Font(30.0));
         main_body.getChildren().addLast(student_header);
 
+        // render student list after 1 seconds
+        PauseTransition wait = new PauseTransition(Duration.seconds(1));
+        VBox root = new VBox();
+        wait.setOnFinished((evt) -> {
+            try{
+                updateStudentManager(root);
+                root.getChildren().clear();
+                new StudentListRenderer(students_manager).render(root, true);
+                wait.playFromStart();
+            } catch(Exception err) {
+                err.printStackTrace();
+            }
+        });
+        wait.play();
+        main_body.getChildren().add(root);
         // Student List
-        new StudentListRenderer(students_manager).render(main_body, true);
+    }
+
+    private void updateStudentManager(VBox root) throws Exception {
+        // students_manager
+        ArrayList<StudentModel> students = students_manager.getStudents();
+        for(StudentModel student : students) {
+            student.num_correct_response = TestResponseModel.getMarks(student.getEmail(), test.getTestID());
+        }
     }
 
     private void renderEndTestButton() {
@@ -400,5 +439,4 @@ public class AdminMainController extends Application implements Initializable {
         // question_bank.print();
         scanner.close();
     }
-
 }

@@ -1,9 +1,9 @@
 package org.example.Model;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 import org.example.Database.SQLDatabaseWrapper;
 
@@ -14,6 +14,7 @@ public class StudentModel {
 
     // not part of database
     private boolean is_selected = false;
+    public int num_correct_response = -1;
 
     public static final String tableName = "Student";
 
@@ -49,6 +50,37 @@ public class StudentModel {
     }
 
     private StudentModel() {
+    }
+
+
+    public static StudentModel fromStudentID(String roll, String testID) throws Exception {
+        StudentModel sm = new StudentModel();
+        sm.is_selected = true;
+        Connection cnxn = SQLDatabaseWrapper.getConnection();
+        PreparedStatement pstmt = cnxn.prepareStatement(
+            "SELECT Name, Email FROM " + tableName + " WHERE Roll = ?"
+        );
+
+        pstmt.setString(1, roll);
+
+        ResultSet res = pstmt.executeQuery();
+        
+        if(res.next()){
+            String name = res.getString("Name");
+            String email = res.getString("Email");
+            sm.roll = roll;
+            sm.name = name;
+            sm.email = email;
+            sm.num_correct_response = TestResponseModel.getMarks(roll, testID);
+        } else {
+            sm = null;
+        }
+
+        return sm;
+    }
+
+    public int getMarks(){
+        return num_correct_response;
     }
 
     public String getName() {

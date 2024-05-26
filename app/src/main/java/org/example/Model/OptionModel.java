@@ -78,6 +78,25 @@ public class OptionModel {
         // pstmt.
     }
 
+    private OptionModel() {}
+
+    public static OptionModel fromOptionID(String optionID) throws Exception {
+        OptionModel opt = new OptionModel();
+        Connection cnxn = SQLDatabaseWrapper.getConnection();
+        PreparedStatement pstmt = cnxn.prepareStatement(
+            "SELECT IsCorrect FROM "+ tableName + " WHERE OptionID = ?"
+        );
+        pstmt.setString(1, optionID);
+        ResultSet res = pstmt.executeQuery();
+        while(res.next()) {
+            opt.is_correct_option = res.getBoolean("IsCorrect");
+        }
+        return opt;
+    }
+
+    public boolean isCorrect() {
+        return is_correct_option;
+    }
 
     public String getOptID() {
         return OptID;

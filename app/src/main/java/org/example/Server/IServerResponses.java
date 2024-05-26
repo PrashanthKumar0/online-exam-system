@@ -7,7 +7,7 @@ public interface IServerResponses {
     // error:
     String failedConnecting = "error:Failed To Connect!";
     String ineligibleForTest = "error:Invalid Credentials or In Eligible to Attend test. Please contact test admin.";
-    
+    String rootClientHandshake = "#rootClientHandshake";
     // signature:
     String endResponseSignature = "signature:@endResponseSignature";
 }

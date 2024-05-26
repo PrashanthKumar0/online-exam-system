@@ -49,4 +49,9 @@ public class Client {
         bufferedWriter.newLine();
         bufferedWriter.flush();
     }
+
+    public static String readLine() throws Exception{
+        if(bufferedReader == null) return "";
+        return bufferedReader.readLine();
+    }
 }

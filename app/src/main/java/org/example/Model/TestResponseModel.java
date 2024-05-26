@@ -3,6 +3,7 @@ package org.example.Model;
 import java.util.UUID;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import org.example.Database.SQLDatabaseWrapper;
 
@@ -67,6 +68,28 @@ public class TestResponseModel {
         }
     }
 
+    public static int getMarks(String studentID, String testID) throws Exception {
+        int marks = 0;
+        Connection cnxn = SQLDatabaseWrapper.getConnection();
+        PreparedStatement pstmt = cnxn.prepareStatement(
+            "SELECT OptionID FROM "+ tableName + " WHERE TestID = ? AND StudentID = ?;"
+        );
+        pstmt.setString(1, testID);
+        pstmt.setString(2, studentID);
+
+        ResultSet res = pstmt.executeQuery();
+        
+        while(res.next()){
+            String optionID = res.getString("OptionID");
+            OptionModel option = OptionModel.fromOptionID(optionID);
+            if(option.isCorrect()) {
+                marks++;
+            }
+        }
+
+
+        return marks;
+    }
 
     public String getOptionId() {
         return option_id;
